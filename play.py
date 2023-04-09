@@ -127,10 +127,9 @@ class _PlayBin(_AbstractStack):
         self.row.pop()
 
 
-
 class Play:
-    NBASE = 4
-    NPLAY = 12
+    NBASE = 8
+    NPLAY = 10
 
     def __init__(self):
         self._deck = Decks()
