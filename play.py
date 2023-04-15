@@ -43,7 +43,8 @@ class _Stack(_AbstractStack):
         return len(self) == len(Deck.RANKS)
 
     def can_put(self, card):
-        return (self.top().value + 1 == card.value) and (self.top().suit == card.suit)
+        return (not self and card.ace()) or \
+            ((self and self.top().value + 1 == card.value) and (self.top().suit == card.suit))
 
     def _put(self, card):
         self.card = card
@@ -53,8 +54,9 @@ class _PlayColumn(_AbstractStack):
     # Вертикальний ігровий ряд.
     def __init__(self, playdeck):
         self.row = []
-        self._put(playdeck.top())
-        playdeck.away()
+        for i in range(4):
+            self._put(playdeck.top())
+            playdeck.away()
 
     def can_put(self, card):
         return not self or self.top() > card
@@ -132,7 +134,7 @@ class Play:
     NPLAY = 10
 
     def __init__(self):
-        self._deck = Decks()
+        self._deck = Decks(2)
         self._playdeck = None  # колода на столі
         self._base = None  # базовий ряд
         self._play = None  # гральні вертикальні ряди

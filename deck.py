@@ -9,7 +9,7 @@ class Deck:
               'K': 13}
     @classmethod
     def all_cards(cls):
-        return (cls.Card(s, r) for s in cls.SUITS for r in cls.RANKS)
+        return (cls.Card(s, r) for s in cls.SUITS for r in cls.RANKS if r not in cls.EXCLUDED)
 
     class Card:
         def __init__(self, suit, rank):
@@ -56,8 +56,8 @@ class Deck:
         def value(self):
             return Deck.VALUES[self.rank]
 
- ####       def ace(self) -> bool:
- ####           return self.rank == 'A'
+        def ace(self) -> bool:
+           return self.rank == 'A'
 
         def __hash__(self):
             return hash((self._isuit, self._irank))
@@ -74,12 +74,12 @@ class Deck:
 class Decks(list):
     def __init__(self, ndeck=1):
         super().__init__()
-        # self._ndeck = ndeck
+        self._ndeck = ndeck
         self._fill()
 
     def _fill(self):
-        # for _ in range(self._ndeck):
-        self.extend(Deck.all_cards())
+        for _ in range(self._ndeck):
+            self.extend(Deck.all_cards())
 
     def shuffle(self):#тасовать
         self.clear()
