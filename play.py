@@ -1,7 +1,7 @@
 from deck import Decks, Deck
 
 
-class _AbstractStack:
+class _AbstractStack(list):
     # Абстрактна стопка карт. Можна покласти, скинути та подивитись верхню.
     def __len__(self):
         raise NotImplementedError
@@ -28,8 +28,8 @@ class _AbstractStack:
 
 class _Stack(_AbstractStack):
     # Стопка базового ряду ідентифікується верхньою картою.
-    def __init__(self):
-        self.card = None
+    def __init__(self, playaces):
+        self.card = next(playaces)
 
     def top(self):
         return self.card
@@ -54,9 +54,8 @@ class _PlayColumn(_AbstractStack):
     # Вертикальний ігровий ряд.
     def __init__(self, playdeck):
         self.row = []
-        for i in range(4):
-            self._put(playdeck.top())
-            playdeck.away()
+        self._put(playdeck.top())
+        playdeck.away()
 
     def can_put(self, card):
         return not self or self.top() > card
@@ -72,18 +71,6 @@ class _PlayColumn(_AbstractStack):
 
     def away(self):
         self.row.pop()
-
-
-class Row(tuple):
-    """
-    Кортеж фіксованого розміру.
-    Конструктор отримує кількість елементів та iterable.
-    """
-
-    def __new__(cls, n, it):
-        it = iter(it)
-        obj = super().__new__(cls, (next(it) for _ in range(n)))
-        return obj
 
 
 class _PlayDeck:
@@ -119,8 +106,8 @@ class _PlayBin(_AbstractStack):
     def _put(self, card):
         self.row.append(card)
 
-   # def __len__(self):
-   #     return len(self.row)
+    def __len__(self):
+       return len(self.row)
 
     def top(self):
         return self.row[-1]
@@ -130,25 +117,35 @@ class _PlayBin(_AbstractStack):
 
 
 class Play:
-    NBASE = 8
-    NPLAY = 10
+    NBASE = 4
+    NPLAY = 6
+    NPLAY_ROWS= 2
 
     def __init__(self):
-        self._deck = Decks(2)
+        self._deck = Decks()
         self._playdeck = None  # колода на столі
+        self._playaces = None  # колода виз тузис
         self._base = None  # базовий ряд
-        self._play = None  # гральні вертикальні ряди
+        self._play = list()  # гральні вертикальні ряди
         self._in_play = False
-        self._bin = None
+        self._playbin = None
         self.new_play()
 
     def new_play(self):
         self._deck.shuffle()
         self._playdeck = _PlayDeck(self._deck)
-        self._base = Row(self.NBASE, iter(_Stack, None))
-        self._play = Row(self.NPLAY, iter(lambda: _PlayColumn(self._playdeck), None))
+        self._play = self.fill_play_rows()
+        aces = Deck.all_aces()
+        self._base = [_Stack(aces) for i in range(self.NBASE)]
         self._playbin = _PlayBin()
         self._in_play = True
+
+    def fill_play_rows(self):
+        for row in range(self.NPLAY_ROWS):
+            row_columns = []
+            for col in range(self.NPLAY):
+                row_columns.append(_PlayColumn(self._playdeck))
+            self._play.append(row_columns)
 
     def win(self):
         res = all(stack.full() for stack in self._base.row)
