@@ -163,32 +163,24 @@ class Play:
         stack_from.away()
         return True
 
-    def play_play(self, i_from, i_to):
-        assert (0 <= i_from < len(self._play))
-        assert (0 <= i_to < len(self._play))
-        if i_from != i_to:
-            return self.move(self._play.row[i_from], self._play.row[i_to])
+    def play_play(self, i_from_row, i_from_col, i_to_row, i_to_col):
+        if i_from_row != i_to_row and i_from_col != i_to_col:
+            return self.move(self._play[i_from_row][i_from_col], self._play[i_to_row][i_to_col])
         return True
 
-    def play_base(self, i_from, i_to):
-        assert (0 <= i_from < len(self._play))
-        assert (0 <= i_to < len(self._base))
-        return self.move(self._play.row[i_from], self._base.row[i_to])
+    def play_base(self, i_from_row, i_from_col, i_to):
+        return self.move(self._play[i_from_row][i_from_col], self._base.row[i_to])
 
-    def deck_play(self, i_to):
-        assert (0 <= i_to < len(self._play))
-        return self.move(self._playdeck, self._play.row[i_to])
+    def deck_play(self, i_to_row, i_to_col):
+        return self.move(self._playdeck, self._play[i_to_row][i_to_col])
 
     def deck_base(self, i_to):
-        assert (0 <= i_to < len(self._base))
         return self.move(self._playdeck, self._base.row[i_to])
 
-    def bin_play(self, i_to):
-        assert (0 <= i_to < len(self._play))
-        return self.move(self._playbin, self._play.row[i_to])
+    def bin_play(self, i_to_row, i_to_col):
+        return self.move(self._playbin, self._play[i_to_row][i_to_col])
 
     def bin_base(self, i_to):
-        assert (0 <= i_to < len(self._base))
         return self.move(self._playbin, self._base.row[i_to])
 
     def deck_bin(self):
