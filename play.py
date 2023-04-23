@@ -119,7 +119,7 @@ class _PlayBin(_AbstractStack):
 class Play:
     NBASE = 4
     NPLAY = 6
-    NPLAY_ROWS= 2
+    NPLAY_ROWS = 2
 
     def __init__(self):
         self._deck = Decks()
@@ -141,11 +141,14 @@ class Play:
         self._in_play = True
 
     def fill_play_rows(self):
+        play = []
         for row in range(self.NPLAY_ROWS):
             row_columns = []
             for col in range(self.NPLAY):
                 row_columns.append(_PlayColumn(self._playdeck))
-            self._play.append(row_columns)
+            play.append(row_columns)
+
+        return play
 
     def win(self):
         res = all(stack.full() for stack in self._base.row)
@@ -153,7 +156,7 @@ class Play:
         return res
 
     @staticmethod
-    def move(stack_from, stack_to):
+    def move(self, stack_from, stack_to):
         card = stack_from.top()
         if card is None:
             return False
