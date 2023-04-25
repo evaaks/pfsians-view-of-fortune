@@ -156,7 +156,7 @@ class Play:
         return res
 
     @staticmethod
-    def move(self, stack_from, stack_to):
+    def move(stack_from, stack_to):
         card = stack_from.top()
         if card is None:
             return False
