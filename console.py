@@ -37,6 +37,3 @@ class Console(play.Play):
     def show_menu(self):
         print('Welcome to pasians')
         input('Choose action: ')
-
-    def start(self):
-        self.show_menu()
