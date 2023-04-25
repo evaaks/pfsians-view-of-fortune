@@ -36,3 +36,6 @@ class Console(play.Play):
 
     def show_menu(self):
         pass
+
+    def start(self):
+        self.show_menu()
