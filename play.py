@@ -72,6 +72,13 @@ class _PlayColumn(_AbstractStack):
     def away(self):
         self.row.pop()
 
+    def __str__(self):
+        play_column_message = "["
+        for card in self.row:
+            play_column_message += f" {card},"
+
+        return f"{play_column_message}]"
+
 
 class _PlayDeck:
     def __init__(self, deck):

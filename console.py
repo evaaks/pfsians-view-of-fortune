@@ -30,9 +30,28 @@ class Console(play.Play):
     def show_play_field(self):
         playdeck_card = self._playdeck.top() if self._playdeck else None
         playbin_card = self._playbin.top() if self._playbin else None
+
         base_cards = [stack.top() for stack in self._base] if self._base else [None for i in range(self.NBASE)]
-        play_columns = []
-        pass
+        base_card_message = ""
+        for i in range(self.NBASE):
+            base_card_message += f"| {i+ 1}. {base_cards[i]} "
+
+        play_columns_message = ""
+        for i in range(self.NPLAY_ROWS):
+            play_columns_message += f"    Row {i + 1} "
+            for n in range(self.NPLAY):
+                play_columns_message += f"| {n + 1}. {self._play[i][n]} "
+
+            play_columns_message += "\n"
+
+        play_field = f"--- PLAY FIELD ---\n" \
+                     f"PlayDeck: |{playdeck_card}|\n" \
+                     f"PlayBin: |{playbin_card}|\n" \
+                     f"Base Row: {base_card_message} |\n" \
+                     f"Play Rows:\n{play_columns_message}\n" \
+                     f"*****************\n\n"
+
+        print(play_field)
 
     def show_menu(self):
         print('Welcome to pasians')
