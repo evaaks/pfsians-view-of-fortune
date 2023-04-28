@@ -1,13 +1,8 @@
-import play
+from play import Play
 
 
-class Console(play.Play):
+class Console(Play):
     """
-    1. Вывод меню игры
-    2. Создания меню
-        2.1. Старт игры
-        2.2 Правила игры
-        2.3 Перезапустить игру (во время игры)
     3. Игра
         3.1. Вывод игрового поля:
             1. Колоду - PlayDeck: |A-S|
@@ -20,14 +15,10 @@ class Console(play.Play):
 
     def __init__(self):
         super().__init__()
+        play_field = self.get_play_field()
+        print(play_field)
 
-    def _set_menu(self):
-        pass
-
-    def _do_action(self):
-        pass
-
-    def show_play_field(self):
+    def get_play_field(self):
         playdeck_card = self._playdeck.top() if self._playdeck else None
         playbin_card = self._playbin.top() if self._playbin else None
 
@@ -44,15 +35,11 @@ class Console(play.Play):
 
             play_columns_message += "\n"
 
-        play_field = f"--- PLAY FIELD ---\n" \
+        play_field = f"---- PLAY FIELD ----\n" \
                      f"PlayDeck: |{playdeck_card}|\n" \
                      f"PlayBin: |{playbin_card}|\n" \
                      f"Base Row: {base_card_message} |\n" \
                      f"Play Rows:\n{play_columns_message}\n" \
                      f"*****************\n\n"
 
-        print(play_field)
-
-    def show_menu(self):
-        print('Welcome to pasians')
-        input('Choose action: ')
+        return play_field
