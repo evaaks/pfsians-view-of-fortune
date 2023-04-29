@@ -133,7 +133,7 @@ class Play:
         self._playdeck = None  # колода на столі
         self._playaces = None  # колода виз тузис
         self._base = None  # базовий ряд
-        self._play = list()  # гральні вертикальні ряди
+        self._play = list()  # гральні горизонтальні ряди
         self._in_play = False
         self._playbin = None
         self.new_play()
@@ -141,7 +141,7 @@ class Play:
     def new_play(self):
         self._deck.shuffle()
         self._playdeck = _PlayDeck(self._deck)
-        self._play = self.fill_play_rows()
+        self.fill_play_rows()
         aces = Deck.all_aces()
         self._base = [_Stack(aces) for i in range(self.NBASE)]
         self._playbin = _PlayBin()
