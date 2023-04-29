@@ -16,8 +16,7 @@ class Console(Play):
 
     def __init__(self):
         super().__init__()
-        play_field = self.get_play_field()
-        print(play_field)
+        self.move_cards()
 
     def get_play_field(self):
         playdeck_card = None
@@ -26,7 +25,6 @@ class Console(Play):
             playdeck_card = self._playdeck.top()
         if self._playbin:
             playbin_card = self._playbin.top()
-        return (playdeck_card, playbin_card)
 
         base_cards = [stack.top() for stack in self._base] if self._base else [None for i in range(self.NBASE)]
         base_card_message = ""
@@ -37,7 +35,7 @@ class Console(Play):
         for i in range(self.NPLAY_ROWS):
             play_columns_message += f"    Row {i + 1} "
             for n in range(self.NPLAY):
-                play_columns_message += f"| {n + 1}. {self._play[i][n]} "#+=???????????????????????
+                play_columns_message += f"| {n + 1}. {self._play[i][n]} "
 
             play_columns_message += "\n"
 
@@ -49,36 +47,50 @@ class Console(Play):
                      f"*****************\n\n"
         return play_field
 
+    def move_cards(self):
+        """
+        1. Перемещение из игрового ряда в базовый
+        2. Вывод сообщения, если карту нельзя переместить
+        3. Вывод сообщения, если пользователь ввел неверную цифру действия
+        4. Вывод сообщения об ошибке, если пользователь пытается переместить карту в несуществующую колонку(например в колонку 100)
+        5. Обработка ошибки если пользователь ввел не число
+        6. Передавать два аргумента в методы перемещения с игровыми рядами(индекс игрового ряда, индекс колонки в игровом ряду)
+        """
+        while self._in_play:
+            print(self.get_play_field())
+            var = int(input("Choose number of operation for card movement from/to:\n"
+                          "1: deck/play row\n"
+                          "2: deck/bin\n"
+                          "3: deck/base row\n"
+                          "4: bin/play row\n"
+                          "5: bin/base row\n"
+                          "6: play row/ play row\n"
+                            ))
 
-    def move_cards(self, card):
-        var = int(input("Choose number of operation for card movement from/to:\n"
-                      "1: deck/play row\n"
-                      "2: deck/bin\n"
-                      "3: deck/base row\n"
-                      "4: bin/play row\n"
-                      "5: bin/base row\n"
-                      "6: play row/ play row\n"
-                        ))
-        if var == 1:
-            pos1 = int(input("Write coordinates to which row, column you want move your card"))
-            pos2 = card.deck_play(pos1)
+            result = True
+            if var == 1:
+                pos1 = int(input("Write coordinates to which row, column you want move your card"))
+                result = self.deck_play(pos1)
 
-        if var == 2:
-            pos1 = int(input("Write coordinates to which row, column you want move your card"))
-            pos2 = card.deck_bin(pos1)
+            if var == 2:
+                result = self.deck_bin()
 
-        if var == 3:
-            pos1 = int(input("Write to which row, column you want move your card"))
-            pos2 = card.deck_base(pos1)
+            if var == 3:
+                pos1 = int(input("Write to which row, column you want move your card"))
+                result = self.deck_base(pos1)
 
-        if var == 4:
-            pos1 = int(input("Write to which row, column you want move your card"))
-            pos2 = card.bin_play(pos1)
+            if var == 4:
+                row = int(input("Write to which row you want move your card"))
+                col = int(input("Write to which column you want move your card"))
+                result = self.bin_play(row - 1, col - 1)
 
-        if var == 5:
-            pos1 = int(input("Write to column you want move your card"))
-            pos2 = card.bin_play(pos1)
+            if var == 5:
+                pos1 = int(input("Write to column you want move your card"))
+                result = self.bin_base(pos1)
 
-        if var == 6:
-            pos1 = int(input("Write coordinates from which row, column to which row, column you want move your card"))
-            pos2 = card.play_play(pos1)
+            if var == 6:
+                pos1 = int(input("Write coordinates from which row, column to which row, column you want move your card"))
+                result = self.play_play(pos1)
+
+            if not result:
+                print("Wrong choose")

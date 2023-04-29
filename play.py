@@ -113,6 +113,9 @@ class _PlayBin(_AbstractStack):
     def _put(self, card):
         self.row.append(card)
 
+    def can_put(self, card):
+        return True
+
     def __len__(self):
        return len(self.row)
 
@@ -141,7 +144,7 @@ class Play:
     def new_play(self):
         self._deck.shuffle()
         self._playdeck = _PlayDeck(self._deck)
-        self.fill_play_rows()
+        self._play = self.fill_play_rows()
         aces = Deck.all_aces()
         self._base = [_Stack(aces) for i in range(self.NBASE)]
         self._playbin = _PlayBin()
@@ -158,7 +161,7 @@ class Play:
         return play
 
     def win(self):
-        res = all(stack.full() for stack in self._base.row)
+        res = all(stack.full() for stack in self._base)
         self._in_play = not res
         return res
 
@@ -179,19 +182,19 @@ class Play:
         return True
 
     def play_base(self, i_from_row, i_from_col, i_to):
-        return self.move(self._play[i_from_row][i_from_col], self._base.row[i_to])
+        return self.move(self._play[i_from_row][i_from_col], self._base[i_to])
 
     def deck_play(self, i_to_row, i_to_col):
         return self.move(self._playdeck, self._play[i_to_row][i_to_col])
 
     def deck_base(self, i_to):
-        return self.move(self._playdeck, self._base.row[i_to])
+        return self.move(self._playdeck, self._base[i_to])
 
     def bin_play(self, i_to_row, i_to_col):
         return self.move(self._playbin, self._play[i_to_row][i_to_col])
 
     def bin_base(self, i_to):
-        return self.move(self._playbin, self._base.row[i_to])
+        return self.move(self._playbin, self._base[i_to])
 
     def deck_bin(self):
         return self.move(self._playdeck, self._playbin)
