@@ -91,15 +91,17 @@ class Console(Play):
                 result = self.bin_base(pos1)
 
             if var == 6:
-                row = int(input("Write coordinates to which row you want move your card: "))
-                col = int(input("Write coordinates to column you want move your card: "))
-                result = self.play_play(row - 1, col - 1)# должно принимать 4 переменные,
-                #                                        из которых 2 первые - это место положение карты,
-                #                                       от куда мы хотим переместить. Аналогично с остальными функциями
+                row_fr = int(input("Write coordinates from which row you want move your card: "))
+                col_fr = int(input("Write coordinates from which column you want move your card: "))
+                row_to = int(input("Write coordinates to which row you want move your card: "))
+                col_to = int(input("Write coordinates to which column you want move your card: "))
+                result = self.play_play(row_fr - 1, col_fr - 1, row_to - 1, col_to - 1)
 
             if var == 7:
-                pos1 = int(input("Write coordinates from which row, column to which column you want move your card: "))
-                result = self.play_base(pos1)
+                row_fr = int(input("Write coordinates from which row you want move your card: "))
+                col_fr = int(input("Write coordinates from which column you want move your card: "))
+                col_to = int(input("Write coordinates to which column you want move your card: "))
+                result = self.play_base(row_fr - 1, col_fr - 1, col_to - 1)
 
             elif var not in range(1, 8):
                 print(f"There is no operation: {var}\n"
@@ -114,7 +116,7 @@ class Console(Play):
             print("Please, check that:\n"
                   "- you chose the appropriate position for card move\n"
                   "- you put your card in an appropriate position and \n "
-                  "the logic of card's sequence monotonically increase still work\n"
+                  "- the logic of card's sequence monotonically increase still work\n"
                   )
 
     def play(self):
