@@ -2,17 +2,6 @@ from play import Play
 
 
 class Console(Play):
-    """
-    1. Вивід правил
-    3. Игра
-        3.1. Вывод игрового поля:
-            1. Колоду - PlayDeck: |A-S|
-            2. Мусорку - PlayBin: |None|
-            3. Игровые ряды - Row 1 | 1. [10-S, 9-S] | 2. [10-S, 9-S] | 3. [10-S, 9-S] | 4. [10-S, 9-S] | 5. [10-S, 9-S] | 6. [10-S, 9-S] |
-                              Row 2 | 1. [10-S, 9-S] | 2. [10-S, 9-S] | 3. [10-S, 9-S] | 4. [10-S, 9-S] | 5. [10-S, 9-S] | 6. [10-S, 9-S] |
-            4. Базовые ряды - | 1. A-S | 2. A-D | 3. A-C | 4. A-H |
-        3.2. Возможность перемещения карт из разных колод
-    """
 
     def __init__(self):
         super().__init__()
@@ -26,7 +15,13 @@ class Console(Play):
         if self._playbin:
             playbin_card = self._playbin.top()
 
-        base_cards = [stack.top() for stack in self._base] if self._base else [None for i in range(self.NBASE)]
+        base_cards = []
+        if self._base:
+            for stack in self._base:
+                base_cards.append(stack.top())
+        else:
+            for i in range(self.NBASE):
+                base_cards.append(None)
         base_card_message = ""
         for i in range(self.NBASE):
             base_card_message += f"| {i+ 1}. {base_cards[i]} "
@@ -70,8 +65,8 @@ class Console(Play):
                 result = self.deck_bin()
 
             if var == 3:
-                pos1 = int(input("Write to which row, column you want move your card: "))
-                result = self.deck_base(pos1)
+                col = int(input("Write to which column you want move your card: "))
+                result = self.deck_base(col - 1)
 
             if var == 4:
                 row = int(input("Write to which row you want move your card: "))
@@ -79,8 +74,8 @@ class Console(Play):
                 result = self.bin_play(row - 1, col - 1)
 
             if var == 5:
-                pos1 = int(input("Write to column you want move your card: "))
-                result = self.bin_base(pos1)
+                col = int(input("Write to column you want move your card: "))
+                result = self.bin_base(col - 1)
 
             if var == 6:
                 row_fr = int(input("Write coordinates from which row you want move your card: "))
@@ -112,6 +107,13 @@ class Console(Play):
                   )
 
     def play(self):
+        print("Мета пасьянсу: необхідно зібрати всі карти на базових стопках у висхідних послідовностях у масть.\n\n"
+            "Правила пасьянсу. З колоди виймаються тузи й кладуться в один ряд. Це базові карти, на яких\n"
+            "необхідно вибудувати висхідні послідовності в масть. Колода ретельно тасується й під базовими картами\n"
+            "викладається 2 горизонтальних ряди по 6 карт. Це ігрові карти. Колоду, що залишилася, кладемо ліворуч,\n"
+            "під колодою знаходиться допоміжна комірка. Карти з ігрових місць і з колоди дозволяється переміщати\n"
+            "в базові стопки у висхідній послідовності в масть. Якщо ігрова карта переміщена й звільняється місце, то\n"
+            "необхідно покласти карту з колоди. Колода проглядається один раз.\n\n")
         while self._in_play:
             print(self.get_play_field())
             self.move_cards()

@@ -54,9 +54,9 @@ class _PlayColumn(_AbstractStack):
     # Вертикальний ігровий ряд.
     def __init__(self, playdeck):
         self.row = []
-        self.play_deck = playdeck
-        self._put(playdeck.top())
-        playdeck.away()
+        self.playdeck = playdeck
+        self._put(self.playdeck.top())
+        self.playdeck.away()
 
     def can_put(self, card):
         return not self or self.top() > card
@@ -73,7 +73,8 @@ class _PlayColumn(_AbstractStack):
     def away(self):
         self.row.pop()
         if not self.row:
-            self._put()
+            self._put(self.playdeck.top())
+            self.playdeck.away()
 
     def __str__(self):
         play_column_message = "["
